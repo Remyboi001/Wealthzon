@@ -1,0 +1,182 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Withdraw</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #2a0064;
+      color: #fff;
+    }
+    .withdraw-container {
+      margin-top: 30px;
+      text-align: center;
+      background-color: #333;
+      padding: 20px;
+      border-radius: 10px;
+    }
+    .withdraw-form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .withdraw-form input {
+      width: 70%;
+      height: 20px;
+      margin-bottom: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+    }
+    .withdraw-form select {
+      width: 80%;
+      height: 40px;
+      margin-bottom: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+    }
+    .withdraw-button {
+      background-color: #4CAF50;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    .withdraw-button:hover {
+      background-color: #3e8e41;
+    }
+    .error-message {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <h3 style="text-align:center;">Withdraw</h3>
+  <div class="withdraw-container">
+    <form class="withdraw-form">
+      <input type="number" id="account-number" placeholder="Account Number">
+      <input type="text" id="account-name" placeholder="Account Name">
+      <select id="bank">
+        <option value="">Select Bank</option>
+        <option value="Access Bank">Access Bank</option>
+        <option value="Ecobank">Ecobank</option>
+        <option value="First Bank">First Bank</option>
+        <option value="Fidelity Bank">Fidelity Bank</option>
+        <option value="GTBank">GTBank</option>
+        <option value="Heritage Bank">Heritage Bank</option>
+        <option value="Keystone Bank">Keystone Bank</option>
+        <option value="Polaris Bank">Polaris Bank</option>
+        <option value="Stanbic IBTC">Stanbic IBTC</option>
+        <option value="Sterling Bank">Sterling Bank</option>
+        <option value="Union Bank">Union Bank</option>
+        <option value="United Bank for Africa">United Bank for Africa</option>
+        <option value="Unity Bank">Unity Bank</option>
+        <option value="Wema Bank">Wema Bank</option>
+        <option value="Zenith Bank">Zenith Bank</option>
+        <option value="OPay">OPay</option>
+        <option value="PalmPay">PalmPay</option>
+      </select>
+      <input type="number" id="amount" placeholder="Amount to Withdraw">
+      <button class="withdraw-button" id="withdraw-button">Withdraw</button>
+      <p id="error-message" class="error-message"></p>
+    </form>
+  </div>
+  <div> 
+  <h4>Please Kindly Note That:</h4>
+  
+  <p>Withdrawal will not  reflect if you have not recharge at least 3,000.
+  
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <script>
+    document.getElementById('withdraw-button').addEventListener('click', function(event) {
+      event.preventDefault();
+      const accountNumber = document.getElementById('account-number').value;
+      const accountName = document.getElementById('account-name').value;
+      const bank = document.getElementById('bank').value;
+      const amount = document.getElementById('amount').value;
+      const balance = parseFloat(localStorage.getItem('balance') || sessionStorage.getItem('balance'));
+
+      // Check if input fields are empty
+      if (accountNumber === '' || accountName === '' || bank === '' || amount === '') {
+        swal({
+          title: "Error!",
+          text: "Please fill in all fields",
+          icon: "error",
+        });
+        return;
+      }
+
+      // Check if amount is a valid number
+      const amountValue = parseFloat(amount);
+      if (isNaN(amountValue)) {
+        swal({
+          title: "Error!",
+          text: "Invalid withdrawal amount",
+          icon: "error",
+        });
+        return;
+      }
+
+      // Check if enough balance is available
+      if (balance < amountValue) {
+        swal({
+          title: "Error!",
+          text: "Insufficient balance. You don't have enough balance to withdraw this amount.",
+          icon: "error",
+        });
+        return;
+      }
+
+      // Check if withdrawal amount is valid
+  if (amountValue < 20000) {
+    swal({
+      title: "Error!",
+      text: "Minimum withdrawal amount is ₦20,000.",
+      icon: "error",
+    });
+    return;
+  }
+
+  // Process withdrawal
+  swal({
+    title: "Please hold on...",
+    text: "Withdrawal is processing..." ,
+    icon: "info",
+  });
+
+  setTimeout(function() {
+    const transaction = {
+      type: 'Withdrawal',
+      amount: amountValue,
+      trx: Math.floor(Math.random() * 1000000000),
+      status: 'pending',
+      timestamp: new Date().getTime(),
+    };
+
+    const storedTransactions = localStorage.getItem('withdrawal-transactions') || sessionStorage.getItem('withdrawal-transactions');
+    let transactions = storedTransactions ? JSON.parse(storedTransactions) : [];
+    transactions.unshift(transaction);
+    localStorage.setItem('withdrawal-transactions', JSON.stringify(transactions));
+    sessionStorage.setItem('withdrawal-transactions', JSON.stringify(transactions));
+
+    const newBalance = balance - amountValue;
+    localStorage.setItem('balance', newBalance.toString());
+    sessionStorage.setItem('balance', newBalance.toString());
+
+    swal({
+      title: "Withdrawal Successful!",
+      text: "Kindly wait for payment.",
+      icon: "success",
+    });
+
+    window.location.href = 'withdrawal-history.html';
+  }, 10000);
+});
+
+</script>
+</body>
+</html>
+

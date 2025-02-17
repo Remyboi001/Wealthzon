@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Recharge</title>
+    <style>
+body {
+font-family: Arial, sans-serif;
+background-color: #2a0064;
+color: #fff;
+}
+
+.input-container {
+  margin-top: 150px;
+  text-align: center;
+}
+
+.input-container label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.input-container select {
+  width: 80%;
+  height: 40px;
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  background-color: #964B00;
+  color: #fff;
+}
+
+.fund-button {
+  background-color: #4CAF50;
+  color: #fff;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.fund-button:hover {
+  background-color: #3e8e41;
+}
+
+.error-message {
+  color: red;
+}
+
+</style>
+</head>
+<body>
+    <a style="color:white; font-size:large; font-weight:bold;" href="dashboard.html"> Back </a>
+    <h3 style="text-align:center;">Recharge Balance</h3>
+    <div class="input-container">
+        <label for="amount" style="font-weight:bold;">Select Recharge Amount:</label>
+        <select id="amount">
+            <option value="0">Select Amount</option>
+            <option value="₦3,000">₦3,000</option>
+            <option value="₦5,000">₦5,000</option>
+            <option value="₦10,000">₦10,000</option>
+            <option value="₦15,000">₦15,000</option>
+            <option value="₦20,000">₦20,000</option>
+        </select>
+        <button class="fund-button" id='make-payment-button' onclick="fundAccount()">Fund Account</button>
+    </div>
+    <div id="error-message" class="error-message"></div>
+
+    <script>
+        const rechargeAmount = document.getElementById('amount');
+document.getElementById('make-payment-button').addEventListener('click', function() {
+  if (rechargeAmount.value === '0') {
+    showError('Please select a recharge amount!');
+  } else {
+    localStorage.setItem('rechargeAmount', rechargeAmount.value);
+    window.location.href = 'payment.html';
+  }
+});
+
+function showError(message) {
+  const errorMessageElement = document.getElementById('error-message');
+  if (!errorMessageElement) {
+    errorMessageElement = document.createElement('div');
+    errorMessageElement.id = 'error-message';
+    errorMessageElement.style.position = 'fixed';
+    errorMessageElement.style.top = '50%';
+    errorMessageElement.style.left = '50%';
+    errorMessageElement.style.transform = 'translate(-50%, -50%)';
+    errorMessageElement.style.background = '#000000';
+    errorMessageElement.style.color = 'white';
+    errorMessageElement.style.padding = '10px';
+    errorMessageElement.style.borderRadius = '10px';
+    document.body.appendChild(errorMessageElement);
+  }
+  errorMessageElement.textContent = message;
+  setTimeout(() => {
+    errorMessageElement.remove();
+  }, 3000);
+}
+
+    </script>
+</body>
+</html>

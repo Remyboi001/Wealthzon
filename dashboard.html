@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+     body {
+font-family: Arial, sans-serif;
+background-color: #230053;
+}
+nav {
+position: fixed;
+top: 0;
+left: 0;
+background-color: rgba(0, 0, 0, 0.9);
+color: white;
+padding: 10px;
+width: 200px;
+height: 100vh;
+display: none;
+flex-direction: column;
+align-items: center;
+z-index: 1;
+}
+nav a {
+color: red;
+text-decoration: none;
+margin: 20px 0;
+display: block;
+}
+.hamburger {
+position: relative;
+top: 20px;
+left: 15px;
+cursor: pointer;
+}
+.hamburger span {
+display: block;
+width: 20px;
+height: 2px;
+background-color: white;
+margin-bottom: 5px;
+}
+.balance {
+position: absolute;
+top: 80px;
+left: 15px;
+font-size: 35px;
+font-weight: bold;
+color: white;
+}
+hr {
+position: relative;
+top: 85px;
+left: 0;
+width: 100%;
+border: none;
+border-top: 1px solid brown;
+}
+.button-container {
+position: absolute;
+top: 200px;
+left: 15px;
+display: flex;
+flex-direction: row;
+align-items: center;
+justify-content: space-around;
+width: 80%;
+}
+.button {
+width: 40px;
+height: 40px;
+margin: 10px;
+border: none;
+border-radius: 10px;
+cursor: pointer;
+}i
+.wallet-icon {
+background-color: #000000;
+}
+.add-funds-icon {
+background-color: #0251a3;
+}
+.cart-icon {
+background-color: #0251a3;
+}
+.button-text {
+color: white;
+font-size: 14px;
+margin: 0;
+text-align: center;
+font-weight: bold;
+}
+.back-button {
+position: absolute;
+top: 20px;
+right: 20px;
+cursor: pointer;
+color: white;
+font-size: 30px;
+}
+.active-miners-container {
+position: absolute;
+top: 300px;
+left: 15px;
+width: 90%;
+color: white;
+height:30px;
+}
+#active-miners {
+margin-top: 20px;
+}
+.miner-container {
+display: flex;
+flex-direction: column;
+align-items: center;
+padding: 20px;
+border: 1px solid grey;
+border-radius: 10px;
+margin: 20px;
+height:310px;
+background-color: #44437f;
+}
+.claim-button {
+background-color: #02005a;
+color: white;
+padding: 10px 20px;
+border: none;
+border-radius: 10px;
+cursor: pointer;
+top:;
+}
+    </style>
+</head>
+<body>
+    <div class="hamburger" id="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+    <nav id="nav">
+        <div class="back-button" onclick="document.getElementById('nav').style.display = 'none';">&times;</div>
+         <a href="task.html">Task</a>
+        <a href="products.html">Products</a>
+        <a href="withdraw.html">Withdraw</a>
+        <a href="recharge.html">Recharge</a>
+        <a href="withdrawal-history.html">History</a>
+        <a href="login.html">Logout</a>
+    </nav>
+    <div>
+        <br/>
+        <br/>
+        <h4 style="color:white;" id="balance-label">Current Balance:</h4>
+    </div>
+<p id="balance" class="balance">₦0.00</p>
+<hr id="balance-hr">
+<div class="button-container" id="button-container">
+<div style="display:flex; flex-direction:column; align-items:center;">
+<button class="button wallet-icon" id="wallet-button" onclick="location.href='withdraw.html'"></button>
+<p class="button-text">Withdraw</p>
+</div>
+<div style="display:flex; flex-direction:column; align-items:center;">
+<button class="button add-funds-icon" id="add-funds-button" onclick="location.href='recharge.html'"></button>
+<p class="button-text">Recharge</p>
+</div>
+<div style="display:flex; flex-direction:column; align-items:center;">
+<button class="button cart-icon" id="cart-button" onclick="location.href='products.html'"></button>
+<p class="button-text">Products</p>
+</div>
+</div>
+<div class="active-miners-container" id="active-miners-container">
+<h2>Active Miners</h2>
+<div id="active-miners"></div>
+</div>
+
+<script>
+
+const hamburger = document.getElementById('hamburger');
+const nav = document.getElementById('nav');
+const balanceElement = document.getElementById('balance');
+let balance = parseFloat(localStorage.getItem('balance')) || 0.00;
+let ownedMiners = JSON.parse(localStorage.getItem('ownedMiners')) || {};
+let rechargeAmount = localStorage.getItem('rechargeAmount') || '0.00';
+let paymentSuccessful = localStorage.getItem('paymentSuccessful') || 'false';
+
+window.addEventListener('load', () => {
+  balance = parseFloat(localStorage.getItem('balance')) || 0.00;
+  balanceElement.textContent = `₦${balance.toLocaleString('en-NG', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+
+  if (paymentSuccessful === 'true') {
+    const cleanRechargeAmount = rechargeAmount.replace('₦', '').replace(',', '');
+    balance += parseFloat(cleanRechargeAmount);
+    localStorage.setItem('balance', balance.toString());
+    balanceElement.textContent = `₦${balance.toLocaleString('en-NG', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+    localStorage.setItem('paymentSuccessful', 'false');
+    localStorage.setItem('rechargeAmount', '');
+  }
+
+  // Update balance every second
+  setInterval(() => {
+    balance += 10;
+    balanceElement.textContent = `₦${balance.toLocaleString('en-NG', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+    localStorage.setItem('balance', balance.toString());
+  }, 1000);
+});
+
+hamburger.addEventListener('click', () => {
+  nav.style.display = nav.style.display === 'block' ? 'none' : 'block';
+});
+
+function updateActiveMiners() {
+  let activeMinersHtml = '';
+  let currentTime = Date.now();
+  if (Object.keys(ownedMiners).length === 0) {
+    activeMinersHtml = '<p>No Active Miners</p>';
+  } else {
+    for (let minerId in ownedMiners) {
+      let miner = ownedMiners[minerId];
+      let timeLeft = miner.expirationDate - currentTime;
+      let daysLeft = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+      let hoursLeft = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      let minutesLeft = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+      let secondsLeft = Math.floor((timeLeft % (1000 * 60)) / 1000);
+      let status = timeLeft > 0 ? 'Active' : 'Expired';
+      let nextClaimTime = miner.lastUpdate + (24 * 60 * 60 * 1000);
+      let timeUntilNextClaim = nextClaimTime - currentTime;
+      let daysUntilNextClaim = Math.floor(timeUntilNextClaim / (1000 * 60 * 60 * 24));
+      let hoursUntilNextClaim = Math.floor((timeUntilNextClaim % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      let minutesUntilNextClaim = Math.floor((timeUntilNextClaim % (1000 * 60 * 60)) / (1000 * 60));
+      let secondsUntilNextClaim = Math.floor((timeUntilNextClaim % (1000 * 60)) / 1000);
+      activeMinersHtml += `
+        <div class="miner-container">
+          <h2>${minerId}</h2>
+          <p>Daily Returns: ₦${miner.dailyReturn.toLocaleString('en-NG', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
+          <p>Expires in: ${daysLeft} days ${hoursLeft} hours ${minutesLeft} minutes ${secondsLeft} seconds</p>
+          <p>Status: ${status}</p>
+          <p>Next Claim in: ${daysUntilNextClaim} days ${hoursUntilNextClaim} hours ${minutesUntilNextClaim} minutes ${secondsUntilNextClaim} seconds</p>
+          <button class="claim-button" id="${minerId}-claim-button" onclick="claimMiner('${minerId}')">Claim</button>
+        </div>
+      `;
+    }
+  }
+  document.getElementById('active-miners').innerHTML = activeMinersHtml;
+}
+
+setInterval(updateActiveMiners, 1000);
+
+function claimMiner(minerId) {
+  let miner = ownedMiners[minerId];
+  let currentTime = Date.now();
+  let nextClaimTime = miner.lastUpdate + (24 * 60 * 60 * 1000);
+  let timeUntilNextClaim = nextClaimTime - currentTime;
+  if (timeUntilNextClaim <= 0) {
+    balance += miner.dailyReturn;
+    miner.lastUpdate = currentTime;
+    localStorage.setItem('balance', balance.toString());
+    localStorage.setItem('ownedMiners', JSON.stringify(ownedMiners));
+    balanceElement.textContent = `₦${balance.toLocaleString('en-NG', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+    updateActiveMiners();
+  } else {
+    showError(`Wait till 24 hours to claim again. Next claim in: ${Math.floor(timeUntilNextClaim / (1000 * 60 * 60))} hours`);
+  }
+}
+
+</script>
+</body>
+</html>

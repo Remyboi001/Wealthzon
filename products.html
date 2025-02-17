@@ -1,0 +1,158 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Products</title>
+<style>
+body {
+font-family: Arial, sans-serif;
+background-color: #230053;
+}
+.product-container {
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+width: 80%;
+margin: 20px auto;
+padding: 20px;
+border: 1px solid grey;
+border-radius: 10px;
+background-color:#44437f;
+}
+.product-description {
+color: white;
+font-size: 18px;
+  margin-bottom: 10px;
+}
+.product-price {
+  color: white;
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+.buy-button {
+  background-color: #02005a;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.buy-button:hover {
+  background-color: #3e8e41;
+}
+.error-message {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: red;
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  display: none;
+}
+</style>
+</head>
+<body>
+<a style="color:white; font-size:large; font-weight:bold;" href="dashboard.html"> Back </a>
+<h1 style="color: white; text-align: center;">Products</h1>
+<div class="product-container">
+  <p class="product-description">VIP 1</p>
+  <p class="product-price">₦3,000</p>
+  <p class="product-description">Daily Return: ₦1,128.57</p>
+  <p class="product-description">Expires after: 7 days</p>
+  <p class="product-description">Total Earning: ₦7,900</p>
+  <button class="buy-button" onclick="buyMiner('miner1', 3000, 1128.57, 7)">Buy</button>
+</div>
+<div class="product-container">
+  <p class="product-description">VIP 2</p>
+  <p class="product-price">₦5,000</p>
+  <p class="product-description">Daily Return: ₦1,814.29</p>
+  <p class="product-description">Expires after: 7 days</p>
+  <p class="product-description">Total Earning: ₦12,700</p>
+  <button class="buy-button" onclick="buyMiner('miner2', 5000, 1814.29, 7)">Buy</button>
+</div>
+<div class="product-container">
+  <p class="product-description">VIP 3</p>
+  <p class="product-price">₦10,000</p>
+  <p class="product-description">Daily Return: ₦2,928.57</p>
+  <p class="product-description">Expires after: 7 days</p>
+  <p class="product-description">Total Earning: ₦20,500</p>
+  <button class="buy-button" onclick="buyMiner('miner3', 10000, 2928.57, 7)">Buy</button>
+</div>
+<div class="product-container">
+  <p class="product-description">VIP 4</p>
+  <p class="product-price">₦15,000</p>
+  <p class="product-description">Daily Return: ₦4,042.86</p>
+  <p class="product-description">Expires after: 7 days</p>
+  <p class="product-description">Total Earning: ₦28,300</p>
+  <button class="buy-button" onclick="buyMiner('miner4', 15000, 4042.86, 7)">Buy</button>
+</div>
+<div class="product-container">
+  <p class="product-description">VIP 5</p>
+  <p class="product-price">₦20,000</p>
+  <p class="product-description">Daily Return: ₦5,157.14</p>
+  <p class="product-description">Expires after: 7 days</p>
+  <p class="product-description">Total Earning: ₦36,100</p>
+  <button class="buy-button" onclick="buyMiner('miner5', 20000, 5157.14, 7)">Buy</button>
+</div>
+<div class="error-message" id="error-message"></div>
+<script>
+function showError(message) {
+  const errorMessage = document.getElementById('error-message');
+  errorMessage.textContent = message;
+  errorMessage.style.display = 'block';
+  setTimeout(() => {
+    errorMessage.style.display = 'none';
+  }, 3000);
+}
+
+function buyMiner(minerId, price, dailyReturn, duration) {
+  let balance = parseFloat(localStorage.getItem('balance')) || 0.00;
+  let ownedMiners = JSON.parse(localStorage.getItem('ownedMiners')) || {};
+  let lastUpdate = Date.now();
+
+  if (balance >= price && !ownedMiners[minerId]) {
+    balance -= price;
+    ownedMiners[minerId] = {
+      price: price,
+      dailyReturn: dailyReturn,
+      duration: duration,
+      lastUpdate: lastUpdate,
+      expirationDate: Date.now() + (duration * 24 * 60 * 60 * 1000)
+    };
+    localStorage.setItem('balance', balance.toString());
+    localStorage.setItem('ownedMiners', JSON.stringify(ownedMiners));
+    document.getElementById('balance').textContent = `₦${balance.toLocaleString('en-NG', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+    updateBuyButton();
+  } else if (balance < price) {
+    showError('Insufficient balance!');
+  } else if (ownedMiners[minerId]) {
+    showError('You already own this miner!');
+  }
+}
+
+function updateBuyButton() {
+  let ownedMiners = JSON.parse(localStorage.getItem('ownedMiners')) || {};
+
+  for (let minerId in ownedMiners) {
+    let buyButton = document.querySelector(`button[onclick="buyMiner('${minerId}', ${ownedMiners[minerId].price}, ${ownedMiners[minerId].dailyReturn}, ${ownedMiners[minerId].duration})"]`);
+
+    if (ownedMiners[minerId].expirationDate < Date.now()) {
+      buyButton.textContent = 'Buy';
+      buyButton.disabled = false;
+    } else {
+      buyButton.textContent = 'Owned';
+      buyButton.disabled = true;
+    }
+  }
+}
+
+setInterval(updateBuyButton, 1000);
+</script>
+</body>
+</html>

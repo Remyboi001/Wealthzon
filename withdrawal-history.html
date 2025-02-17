@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Withdrawal History</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #2a0064;
+      color: #fff;
+    }
+    .history-container {
+      margin-top: 30px;
+      text-align: center;
+      background-color: #333;
+      padding: 20px;
+      border-radius: 10px;
+    }
+    .history-item {
+      background-color: #444;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .pending {
+      color: yellow;
+    }
+    .successful {
+      color: green;
+    }
+    .declined {
+      color: red;
+    }
+    .transaction-container {
+  background-color: #44437f;
+  padding: 20px;
+  border-bottom: 1px solid grey;
+}
+
+.transaction {
+  margin-bottom: 20px;
+}
+
+.transaction h4 {
+  font-weight: bold;
+  margin-top: 0;
+}
+
+.transaction p {
+  margin-bottom: 10px;
+}
+  </style>
+</head>
+<body>
+  <h3 style="text-align:center;">Withdrawal History</h3>
+  <div class="history-container">
+    <h4>Latest Transactions:</h4>
+    <div id="withdrawal-history-list"></div>
+  </div>
+  <script>
+
+// Function to render withdrawal history
+function renderWithdrawalHistory() {
+  const storedTransactions = localStorage.getItem('withdrawal-transactions') || sessionStorage.getItem('withdrawal-transactions');
+  let transactions = storedTransactions ? JSON.parse(storedTransactions) : [];
+  const withdrawalHistoryListElement = document.getElementById('withdrawal-history-list');
+
+  // Sort transactions by timestamp in descending order (newest first)
+  transactions.sort((a, b) => b.timestamp - a.timestamp);
+
+  transactions.forEach((transaction) => {
+    const transactionContainer = document.createElement('div');
+    transactionContainer.classList.add('transaction-container');
+
+    let statusColor;
+    if (transaction.status === 'Successful') {
+      statusColor = 'green';
+    } else if (transaction.status === 'Declined') {
+      statusColor = 'red';
+    } else {
+      statusColor = 'orange';
+    }
+
+    const transactionHtml = `
+      <div class="transaction">
+        <h4>Withdrawal Amount: ₦${transaction.amount}</h4>
+        <p>Transaction ID: ${transaction.trx}</p>
+        <p>Status: <span style="color: ${statusColor};">${transaction.status}</span></p>
+        <p>Date: ${new Date(transaction.timestamp).toLocaleString()}</p>
+      </div>
+    `;
+
+    transactionContainer.innerHTML = transactionHtml;
+    withdrawalHistoryListElement.appendChild(transactionContainer);
+  });
+}
+
+// Render withdrawal history on page load
+renderWithdrawalHistory();
+
+  </script>
+</body>
+</html>
+

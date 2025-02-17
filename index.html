@@ -1,0 +1,113 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WealthZone</title>
+<style>
+body {
+font-family: Arial, sans-serif;
+background-color: #230053;
+margin: 0;
+padding: 0;
+}
+header {
+background-color: #44437f;
+color: #fff;
+padding: 20px;
+text-align: center;
+position: relative;
+z-index: 1;
+}
+main {
+display: flex;
+justify-content: center;
+align-items: center;
+height: 100vh;
+flex-direction: column;
+margin-top: 80px; /* added margin to push main content down */
+}
+section {
+background-color: #44437f;
+padding: 20px;
+border: 1px solid #333;
+border-radius: 10px;
+box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+margin-bottom: 20px;
+color: #fff;
+}
+h1 {
+font-size: 24px;
+margin-bottom: 10px;
+}
+h2 {
+font-size: 18px;
+margin-bottom: 10px;
+}
+ul {
+list-style: none;
+padding: 0;
+margin: 0;
+}
+li {
+margin-bottom: 10px;
+}
+.floating-btn {
+position: fixed;
+bottom: 20px;
+right: 20px;
+background-color: #4CAF50;
+color: #fff;
+padding: 10px 20px;
+border: none;
+border-radius: 5px;
+cursor: pointer;
+}
+.floating-btn:hover {
+background-color: #3e8e41;
+}
+</style>
+</head>
+<body>
+<header>
+<h1>WealthZone</h1>
+<p>Invest, Earn, and Grow with Us</p>
+</header>
+<main>
+<section>
+<h2>Welcome to WealthZone</h2>
+<p>WealthZone is a revolutionary investment platform that empowers individuals to earn passive income by investing in goods.</p>
+</section>
+<section>
+<h2>How it Works</h2>
+<ol>
+<li>Invest in goods through our platform.</li>
+<li>Our sales company sells the invested goods.</li>
+<li>Earn your investment money back plus a commission on the sale.</li>
+</ol>
+</section>
+<section>
+<h2>Benefits</h2>
+<ul>
+<li>Earn passive income through commissions</li>
+<li>Low-risk investment opportunities</li>
+<li>Flexible investment options</li>
+<li>Professional sales team handling sales and distribution</li>
+</ul>
+</section>
+<section>
+<h2>Join Our Community</h2>
+<p>Be part of a growing community of investors who are taking control of their financial future.</p>
+<p>Sign up today and start investing in goods to earn passive income.</p>
+</section>
+</main>
+<button class="floating-btn" id="login-btn">Get Started</button>
+<script>
+const loginBtn = document.getElementById('login-btn');
+loginBtn.addEventListener('click', () => {
+window.location.href = 'login.html';
+});
+</script>
+</body>
+</html>

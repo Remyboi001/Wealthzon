@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Payment</title>
+<style>
+body {
+      font-family: Arial, sans-serif;
+      background-color: #2a0064;
+      color: #fff;
+    }
+    .payment-container {
+      margin-top: 30px;
+      text-align: center;
+      background-color: #333;
+      padding: 20px;
+      border-radius: 10px;
+    }
+    .payment-amount {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+    .upload-container {
+      margin-top: 20px;
+      text-align: center;
+    }
+    .make-payment-button {
+      background-color: brown;
+      color: #fff;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+    .make-payment-button:hover {
+      background-color: brown;
+      margin-top: 10px;
+    }
+    .error-message {
+      color: red;
+    }
+    #payment-proof {
+      height: 50px;
+      font-size: 18px;
+    }
+    #sender-name {
+      height: 10px;
+      width: 280px;
+      font-size: 18px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+</style>
+</head>
+<body>
+<a style="color:white; font-size:large; font-weight:bold;" href="recharge.html">Back</a>
+<h3 style="text-align:center; color: red;">Fund Wallet</h3>
+<div class="payment-container">
+<p class="payment-amount" id="payment-amount"></p>
+<div class="payment-instructions">
+<p>Please proceed to make a payment to the following account details.</p>
+<p>Account Name:-  OLUBUNMI OSEDEJI</p>
+<p>Account Number:- 9138737531</p>
+<p>Bank: MOMO PSB</p>
+<p>Subsequently, kindly upload the proof of payment.</p>
+</div>
+
+</div>
+
+<div class="upload-container">
+<input type="file" id="payment-proof" accept="image/*">
+<input type="text" id="sender-name" name="sender-name" placeholder="Enter sender(s) full name">
+<div id="error-message" class="error-message"></div>
+<button class="make-payment-button" id="make-payment-button">I Have Paid</button>
+</div>
+<div <h4>Notice!</h4>
+<p>Proof will be sent to our team for comfirmation </p>
+<p>Money will be deducted if payment not found!</p>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+<script>
+document.getElementById('payment-amount').textContent = `Fund Wallet with: ${localStorage.getItem('rechargeAmount')}`;
+
+document.getElementById('make-payment-button').addEventListener('click', function() {
+  const uploadInput = document.getElementById('payment-proof');
+  const senderNameInput = document.getElementById('sender-name');
+
+  if (uploadInput.value === '' || senderNameInput.value === '') {
+    showError('Please upload a payment proof and Enter Sender(s) Name!');
+  } else {
+    swal({
+      title: "Payment submitted for approval!",
+      text: "Please wait for approval.",
+      icon: "success",
+    })
+    .then(() => {
+      localStorage.setItem('paymentSuccessful', 'true');
+      window.location.href = 'dashboard.html';
+    });
+  }
+});
+
+function showError(message) {
+  const errorMessageElement = document.getElementById('error-message');
+  if (!errorMessageElement) {
+    errorMessageElement = document.createElement('div');
+    errorMessageElement.id = 'error-message';
+    errorMessageElement.style.position = 'fixed';
+    errorMessageElement.style.top = '50%';
+    errorMessageElement.style.left = '50%';
+    errorMessageElement.style.transform = 'translate(-50%, -50%)';
+    errorMessageElement.style.background = '#000000';
+    errorMessageElement.style.color = 'white';
+    errorMessageElement.style.padding = '10px';
+    errorMessageElement.style.borderRadius = '10px';
+    document.body.appendChild(errorMessageElement);
+  }
+  errorMessageElement.textContent = message;
+  setTimeout(() => {
+    errorMessageElement.remove();
+  }, 3000);
+}
+
+</script>
+
+</body>
+</html>
